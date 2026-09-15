@@ -1,0 +1,3 @@
+# Keep shell scripts on LF so Linux containers can exec them
+# (Windows CRLF checkouts cause "no such file or directory" on entrypoints).
+*.sh text eol=lf

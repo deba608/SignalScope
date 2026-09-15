@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query";
 import { recordingsApi, projectsApi } from "@/lib/api";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UploadWizard } from "@/components/UploadWizard";
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 export default function RecordingsPage() {
+  usePageTitle("Recordings");
   const [showUpload, setShowUpload] = React.useState(false);
   const queryClient = useQueryClient();
   const { addToast } = useToast();

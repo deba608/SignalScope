@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -22,8 +22,15 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SignalScope AI",
+  title: {
+    default: "SignalScope AI",
+    template: "%s · SignalScope AI",
+  },
   description: "Explainable RF signal analysis workbench",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#060B14",
 };
 
 export default function RootLayout({

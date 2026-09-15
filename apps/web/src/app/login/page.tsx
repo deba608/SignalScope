@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuthStore } from "@/lib/auth";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,6 +36,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function LoginPage() {
   const [mode, setMode] = React.useState<"login" | "register">("login");
+  usePageTitle(mode === "login" ? "Sign in" : "Create account");
   const { login, register, isAuthenticated, isLoading, checkAuth } = useAuthStore();
   const router = useRouter();
   const { addToast } = useToast();

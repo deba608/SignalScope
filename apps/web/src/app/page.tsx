@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { dashboardApi } from "@/lib/api";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard } from "@/components/ConfidenceIndicator";
 import SignalBackdrop from "@/components/SignalBackdrop";
@@ -11,6 +12,7 @@ import Link from "next/link";
 import { ArrowRight, FolderOpen, Radio } from "lucide-react";
 
 export default function DashboardPage() {
+  usePageTitle("Dashboard");
   const { data: stats, isLoading, error } = useQuery({
     queryKey: ["dashboard"],
     queryFn: dashboardApi.stats,

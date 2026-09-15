@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import os
+import tempfile
 import uuid
+from pathlib import Path
 from typing import AsyncGenerator
 
 import pytest
@@ -11,9 +13,15 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
+# Cross-platform temp paths: the old hardcoded /tmp/test.db breaks on Windows
+# (sqlite "unable to open database file"). Use the OS temp dir instead.
+_TMP = Path(tempfile.gettempdir()).as_posix()
+_TEST_DB_PATH = f"{_TMP}/signalscope_test.db"
+_TEST_DATA_DIR = f"{_TMP}/signalscope_test_data"
+
 os.environ["CELERY_TASK_ALWAYS_EAGER"] = "1"
-os.environ["DATABASE_URL"] = "sqlite+aiosqlite:////tmp/test.db"
-os.environ["DATA_DIR"] = "/tmp/test_data"
+os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{_TEST_DB_PATH}"
+os.environ["DATA_DIR"] = _TEST_DATA_DIR
 os.environ["SECRET_KEY"] = "test-secret-key"
 os.environ["CORS_ORIGINS"] = '["http://localhost:3000"]'
 
@@ -23,10 +31,10 @@ from app.database import get_db  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Base, User  # noqa: E402
 
-# SQLite for tests, kept on the container's local disk (/tmp) rather than the
-# bind-mounted host filesystem, where sqlite's file locking is unreliable
-# under Docker-on-Windows (intermittent `disk I/O error` during drop_all).
-TEST_DB_URL = "sqlite+aiosqlite:////tmp/test.db"
+# SQLite for tests, kept on the OS temp disk rather than the bind-mounted host
+# filesystem, where sqlite's file locking is unreliable under Docker-on-Windows
+# (intermittent `disk I/O error` during drop_all).
+TEST_DB_URL = f"sqlite+aiosqlite:///{_TEST_DB_PATH}"
 test_engine = create_async_engine(TEST_DB_URL, echo=False)
 TestSessionLocal = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
 

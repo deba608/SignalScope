@@ -18,6 +18,7 @@ import { SectionTabs } from "@/components/SectionTabs";
 import { BurstTimeline } from "@/components/BurstTimeline";
 import BlueprintBackground from "@/components/BlueprintBackground";
 import { formatBytes, formatDuration, formatFrequency, downsamplePair } from "@/lib/utils";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { useToast } from "@/components/ui/toast";
 import { CHART_TRACE_COLORS } from "@/lib/tokens";
 import { cn } from "@/lib/utils";
@@ -76,6 +77,8 @@ export default function AnalysisWorkspacePage() {
     queryKey: ["project", projectId],
     queryFn: () => projectsApi.get(projectId),
   });
+
+  usePageTitle(project?.name ?? "Analysis Workspace");
 
   const recordingId = project?.recording_id;
 
